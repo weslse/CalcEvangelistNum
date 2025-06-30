@@ -93,8 +93,6 @@ HCURSOR CCalcEvangelistNumDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 void CCalcEvangelistNumDlg::OnBnClickedCalc()
 {
 	CString srcStr;
