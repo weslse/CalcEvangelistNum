@@ -1,5 +1,4 @@
-﻿
-// CalcEvangelistNumDlg.cpp: 구현 파일
+﻿// CalcEvangelistNumDlg.cpp: 구현 파일
 //
 
 #include "pch.h"
@@ -37,6 +36,7 @@ BEGIN_MESSAGE_MAP(CCalcEvangelistNumDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(ID_CALC, &CCalcEvangelistNumDlg::OnBnClickedCalc)
+	ON_BN_CLICKED(IDC_RESET, &CCalcEvangelistNumDlg::OnBnClickedReset)
 END_MESSAGE_MAP()
 
 
@@ -46,15 +46,15 @@ BOOL CCalcEvangelistNumDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// 이 대화 상자의 아이콘을 설정합니다.  응용 프로그램의 주 창이 대화 상자가 아닐 경우에는
-	//  프레임워크가 이 작업을 자동으로 수행합니다.
 	ModifyStyle(0, WS_SYSMENU, 0);
-	//SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
-	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
+	SetIcon(m_hIcon, FALSE);
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	SetWindowTextW(_T("Evangelist Number Calculator"));
-	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
+
+	// 멀티라인 + 세로 스크롤만 추가
+	m_evangelist_list.ModifyStyle(WS_HSCROLL, ES_MULTILINE | WS_VSCROLL);
+
+	return TRUE;
 }
 
 // 대화 상자에 최소화 단추를 추가할 경우 아이콘을 그리려면
@@ -97,30 +97,35 @@ HCURSOR CCalcEvangelistNumDlg::OnQueryDragIcon()
 
 void CCalcEvangelistNumDlg::OnBnClickedCalc()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CString srcStr;
-	CString subStr;
 	m_evangelist_list.GetWindowTextW(srcStr);
-	if (srcStr == "")
-	{
-		CString null_string = _T("0(0)");
-		m_num.SetWindowTextW(null_string);
+	if (srcStr.IsEmpty()) {
+		m_num.SetWindowTextW(_T("0(0)"));
 		return;
 	}
 
 	std::vector<CString> evangelists;
-	int i = 0;
-	while (AfxExtractSubString(subStr, srcStr, i++, ' '))
-	{
-		evangelists.push_back(subStr);
+	LPCTSTR delimiters = _T(" ;\n");
+	int curPos = 0;
+	CString token;
+	while (!(token = srcStr.Tokenize(delimiters, curPos)).IsEmpty()) {
+		token.Trim();
+		token.TrimRight(_T(".,;\n")); // , . ; \n 이 포함되어 있으면 제거	
+		if (!token.IsEmpty())
+			evangelists.push_back(token);
 	}
 
 	CString total_num = CString(std::to_string(evangelists.size()).c_str());
-
 	std::sort(evangelists.begin(), evangelists.end());
 	evangelists.erase(std::unique(evangelists.begin(), evangelists.end()), evangelists.end());
 	CString sieve_num = CString(std::to_string(evangelists.size()).c_str());
 
 	CString result_string = sieve_num + '(' + total_num + ')';
 	m_num.SetWindowTextW(result_string);
+}
+
+void CCalcEvangelistNumDlg::OnBnClickedReset()
+{
+	m_evangelist_list.SetWindowTextW(_T(""));
+	m_num.SetWindowTextW(_T(""));
 }

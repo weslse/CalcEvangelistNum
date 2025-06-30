@@ -16,6 +16,7 @@
 
 BEGIN_MESSAGE_MAP(CCalcEvangelistNumApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+	ON_BN_CLICKED(IDC_RESET, &CCalcEvangelistNumApp::OnBnClickedReset)
 END_MESSAGE_MAP()
 
 
@@ -90,3 +91,8 @@ BOOL CCalcEvangelistNumApp::InitInstance()
 	return FALSE;
 }
 
+
+void CCalcEvangelistNumApp::OnBnClickedReset()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}

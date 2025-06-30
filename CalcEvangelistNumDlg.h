@@ -33,5 +33,7 @@ protected:
 public:
 	CEdit m_evangelist_list;
 	CEdit m_num;
+
 	afx_msg void OnBnClickedCalc();
+	afx_msg void OnBnClickedReset();
 };
