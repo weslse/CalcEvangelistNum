@@ -105,7 +105,7 @@ void CCalcEvangelistNumDlg::OnBnClickedCalc()
 	}
 
 	std::vector<CString> evangelists;
-	LPCTSTR delimiters = _T(" ;\n");
+	LPCTSTR delimiters = _T(" ,.;\n");
 	int curPos = 0;
 	CString token;
 	while (!(token = srcStr.Tokenize(delimiters, curPos)).IsEmpty()) {
